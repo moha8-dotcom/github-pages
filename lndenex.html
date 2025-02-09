@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاربون الهاكر</title>
+    <link rel="stylesheet" href="style.css">
+<style type="text/css" id="dcoder_stylesheet">* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', monospace;
+}
+
+body {
+    background: #000;
+    color: #0f0;
+    text-align: center;
+    overflow: hidden;
+}
+
+header {
+    padding: 20px;
+    font-size: 20px;
+    border-bottom: 2px solid #0f0;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+.console, .ai-chat {
+    background: rgba(0, 255, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    width: 40%;
+    text-align: center;
+}
+
+input {
+    padding: 10px;
+    width: 80%;
+    background: black;
+    color: #0f0;
+    border: 1px solid #0f0;
+}
+
+button {
+    padding: 10px;
+    background: #0f0;
+    color: black;
+    border: none;
+    cursor: pointer;
+}
+
+#backgroundCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+}</style></head>
+<body>
+    <header>
+        <h1>⚡ محاربون الهاكر ⚡</h1>
+        <p>أقوى مجتمع لمحبي الأمن السيبراني والاختراق الأخلاقي</p>
+    </header>
+
+    <section class="container">
+        <div class="console">
+            <h2>💀 نافذة الهاكر التفاعلية</h2>
+            <input type="text" id="command" placeholder="أدخل أمرًا مثل: help">
+            <button onclick="runCommand()">تشغيل</button>
+            <p id="output"></p>
+        </div>
+
+        <div class="ai-chat">
+            <h2>🧠 ذكاء اصطناعي</h2>
+            <input type="text" id="userInput" placeholder="اسألني عن الأمن السيبراني...">
+            <button onclick="askAI()">إرسال</button>
+            <p id="response"></p>
+        </div>
+    </section>
+
+    <canvas id="backgroundCanvas"></canvas>
+
+    <script src="script.js"></script>
+    <script src="ai.js"></script>
+
+<script type="text/javascript" id="dcoder_script">import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.136.0/build/three.module.js';
+import gsap from 'https://cdn.jsdelivr.net/npm/gsap@3.9.1/index.js';
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('backgroundCanvas') });
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+const geometry = new THREE.TorusGeometry(5, 1, 16, 100);
+const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+const torus = new THREE.Mesh(geometry, material);
+scene.add(torus);
+
+const light = new THREE.PointLight(0xffffff, 1);
+light.position.set(10, 10, 10);
+scene.add(light);
+
+camera.position.z = 20;
+
+function animate() {
+    requestAnimationFrame(animate);
+    torus.rotation.x += 0.01;
+    torus.rotation.y += 0.01;
+    renderer.render(scene, camera);
+}
+
+animate();
+
+gsap.to(torus.scale, { duration: 2, x: 1.5, y: 1.5, z: 1.5, repeat: -1, yoyo: true });
+
+function runCommand() {
+    let command = document.getElementById("command").value.toLowerCase();
+    let output = document.getElementById("output");
+
+    if (command === "help") {
+        output.innerText = "الأوامر المتاحة: help, hack, exit";
+    } else if (command === "hack") {
+        output.innerText = "🚀 جاري الاختراق المزيف... 😂";
+    } else if (command === "exit") {
+        output.innerText = "👋 تم الخروج!";
+    } else {
+        output.innerText = "❌ أمر غير معروف!";
+    }
+}async function askAI() {
+    let userInput = document.getElementById("userInput").value;
+    let responseElement = document.getElementById("response");
+
+    const response = await fetch("https://api.openai.com/v1/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer YOUR_OPENAI_API_KEY"
+        },
+        body: JSON.stringify({
+            model: "text-davinci-003",
+            prompt: "أنت مساعد أمني، أجب عن: " + userInput,
+            max_tokens: 100
+        })
+    });
+
+    const data = await response.json();
+    responseElement.innerText = data.choices[0].text.trim();
+}
+</script></body></html>
